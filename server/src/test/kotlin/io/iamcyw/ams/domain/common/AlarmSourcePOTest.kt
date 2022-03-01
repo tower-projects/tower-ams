@@ -1,6 +1,6 @@
 package io.iamcyw.ams.domain.common
 
-import io.iamcyw.ams.domain.job.strategy.AlarmSourcePO
+import io.iamcyw.ams.job.strategy.persistence.AlarmSourcePO
 import io.quarkus.test.TestTransaction
 import io.quarkus.test.junit.QuarkusTest
 import kotlinx.serialization.encodeToString
@@ -30,6 +30,6 @@ class AlarmSourcePOTest {
 
     @Test
     fun testSer() {
-        println(Json.encodeToString(AlarmSourcePO(1L, "name")))
+//        println(Json.encodeToString(AlarmSourcePO(1L, "name")))
     }
 }

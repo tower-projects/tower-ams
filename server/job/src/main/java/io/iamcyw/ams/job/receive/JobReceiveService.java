@@ -26,19 +26,17 @@ public class JobReceiveService {
 
     @CommandHandle
     public void handle(ReceiveAlarm receiveAlarm) {
-        AlarmSourcePO alarmSourcePO = AlarmSourcePO.findByName(receiveAlarm.source);
+        AlarmSourcePO alarmSourcePO = AlarmSourcePO.findByName(receiveAlarm.getSource());
         List<Long> strategies = queryGateway.queries(
                 new QueryAllowStrategy(alarmSourcePO.id, receiveAlarm.getMessage()));
-        strategies.stream()
-                  .map(id -> AlarmStrategyPO.<AlarmStrategyPO>findById(id))
-                  .filter(alarmStrategyPO -> {
+        strategies.stream().map(id -> AlarmStrategyPO.<AlarmStrategyPO>findById(id)).filter(alarmStrategyPO -> {
                       // todo 检查是否需要在单位时间内忽略重复警报
                       if (alarmStrategyPO.repeatTimeInterval != 0L) {
 
                       }
                       return true;
-                  })
-                  .map(alarmStrategyPO -> new AddAlarm(alarmStrategyPO.id, alarmSourcePO.id, receiveAlarm.getMessage()))
+                  }).map(alarmStrategyPO -> new AddAlarm(alarmStrategyPO.id, alarmSourcePO.id,0,
+                                                         receiveAlarm.getMessage()))
                   .forEach(commandGateway::send);
 
     }

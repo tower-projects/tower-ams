@@ -5,13 +5,12 @@ plugins {
 }
 
 
-val serializationVersion:String by project
+val serializationVersion: String by project
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${serializationVersion}")
     // 为了序列化来自kotlin的domain
-    implementation("io.quarkus:quarkus-kotlin")
 
-    implementation("io.quarkus:quarkus-hibernate-orm-panache-kotlin")
+    implementation("io.quarkus:quarkus-hibernate-orm-panache")
     implementation("io.quarkus:quarkus-agroal")
     implementation("io.quarkus:quarkus-jdbc-oracle")
     implementation("io.quarkus:quarkus-vertx-web")
@@ -23,8 +22,8 @@ dependencies {
 
     testImplementation("io.quarkus:quarkus-junit5")
 
-//    implementation(project(":server:job"))
-//    implementation(project(":server:notification"))
+    implementation(project(":server:job"))
+    implementation(project(":server:notification"))
 
     implementation(project(":domain"))
 }

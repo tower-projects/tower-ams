@@ -25,11 +25,9 @@ tasks.withType(KotlinCompile::class) {
 }
 
 plugins.withType(JavaPlugin::class) {
-    val towerMessageVersion: String by project
-    val quarkusVersion: String by project
-    val enforced = dependencies.platform("io.iamcyw.tower:messaging-dependencies:$towerMessageVersion")
-    val quarkusEnf = dependencies.enforcedPlatform("io.quarkus.platform:quarkus-bom:$quarkusVersion")
-    val camelEnf = dependencies.enforcedPlatform("io.quarkus.platform:quarkus-camel-bom:$quarkusVersion")
+    val enforced = dependencies.platform("io.iamcyw.tower:messaging-dependencies:${rootProject.extra["towerVersion"]}")
+    val quarkusEnf = dependencies.enforcedPlatform("io.quarkus.platform:quarkus-bom:${rootProject.extra["quarkusVersion"]}")
+    val camelEnf = dependencies.enforcedPlatform("io.quarkus.platform:quarkus-camel-bom:${rootProject.extra["quarkusVersion"]}")
 
     dependencies.add(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME, enforced)
     dependencies.add(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME, quarkusEnf)

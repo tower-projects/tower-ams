@@ -19,6 +19,6 @@ data class RetryAlarm(val alarm: Long)
  * 实际通知的处理器
  */
 data class NotificationHandler(
-    val push: StrategyPush,
-    val payload: AlarmMessage
+        val push: StrategyPush,
+        val payload: AlarmMessage
 )
