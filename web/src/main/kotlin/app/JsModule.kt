@@ -22,11 +22,21 @@ abstract external class ShellBar
 abstract external class Button
 
 @JsModule("@ui5/webcomponents-icons/dist/AllIcons.js")
+@JsNonModule
 abstract external class Icons
 
 
 @JsModule("@ui5/webcomponents-fiori/dist/Page.js")
+@JsNonModule
 abstract external class Page
+
+@JsModule("@ui5/webcomponents-fiori/dist/IllustratedMessage.js")
+@JsNonModule
+abstract external class IllustratedMessage
+
+@JsModule("@ui5/webcomponents-fiori/dist/illustrations/PageNotFound.js")
+@JsNonModule
+abstract external class PageNotFound
 
 //@JsModule("@ui5/webcomponents/dist/Assets.js")
 //abstract external class Assets

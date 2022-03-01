@@ -12,25 +12,25 @@ import org.w3c.dom.HTMLElement
  * Helper function to build [PlaceRequest]s.
  */
 public fun placeRequest(token: String): PlaceRequest =
-    PlaceRequest(token)
+        PlaceRequest(token)
 
 /**
  * Helper function to build [PlaceRequest]s.
  */
 public fun placeRequest(token: String, params: Pair<String, String>): PlaceRequest =
-    PlaceRequest(token, mapOf(params))
+        PlaceRequest(token, mapOf(params))
 
 /**
  * Helper function to build [PlaceRequest]s.
  */
 public fun placeRequest(token: String, vararg params: Pair<String, String>): PlaceRequest =
-    PlaceRequest(token, mapOf(*params))
+        PlaceRequest(token, mapOf(*params))
 
 /**
  * Helper function to build [PlaceRequest]s.
  */
 public fun placeRequest(token: String, params: MutableMap<String, String>.() -> Unit = {}): PlaceRequest =
-    PlaceRequest(token, buildMap(params))
+        PlaceRequest(token, buildMap(params))
 
 /**
  * A place request consists of a token and an optional map of parameters.
@@ -68,12 +68,12 @@ public class PlaceRequestRoute(override val default: PlaceRequest) : Route<Place
     override fun deserialize(hash: String): PlaceRequest {
         val token = hash.substringBefore(';')
         val params = hash.substringAfter(';', "")
-            .split(";")
-            .filter { it.isNotEmpty() }
-            .associate {
-                val (key, value) = it.split("=")
-                key to decodeURIComponent(value)
-            }
+                .split(";")
+                .filter { it.isNotEmpty() }
+                .associate {
+                    val (key, value) = it.split("=")
+                    key to decodeURIComponent(value)
+                }
         return PlaceRequest(token, params)
     }
 
@@ -84,8 +84,8 @@ public class PlaceRequestRoute(override val default: PlaceRequest) : Route<Place
         append(route.token)
         if (route.params.isNotEmpty()) {
             route.params
-                .map { (key, value) -> "$key=${encodeURIComponent(value)}" }
-                .joinTo(this, ";", ";")
+                    .map { (key, value) -> "$key=${encodeURIComponent(value)}" }
+                    .joinTo(this, ";", ";")
         }
     }
 }
@@ -111,14 +111,13 @@ public fun <E : HTMLElement> Tag<E>.managedBy(placeManager: PlaceManager) {
  * @param defaultPlaceRequest the default / initial place request
  * @param notFound a function to show content for places which are not bound to a presenter
  *
- * @sample org.patternfly.mvp.sample.PlaceManagerSample.typicalSetup
  */
 public class PlaceManager(
-    private val defaultPlaceRequest: PlaceRequest,
-    private val notFound: RenderContext.(PlaceRequest) -> Unit = {
-        h1 { +"404" }
-        p { +"${it.token} not found" }
-    }
+        private val defaultPlaceRequest: PlaceRequest,
+        private val notFound: RenderContext.(PlaceRequest) -> Unit = {
+            h1 { +"404" }
+            p { +"${it.token} not found" }
+        }
 ) {
 
     private var error: Boolean = false

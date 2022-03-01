@@ -2,10 +2,13 @@ package app
 
 import app.component.menu
 import app.component.mvp.managedBy
+import app.component.page
 import dev.fritz2.binding.storeOf
 import dev.fritz2.components.flexBox
 import dev.fritz2.dom.html.render
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@OptIn(ExperimentalCoroutinesApi::class)
 fun main() {
     val isCollapsed = storeOf(false)
 
@@ -32,7 +35,9 @@ fun main() {
                 width { full }
             }) {
                 menu(isCollapsed.data)
-                section {
+                page {
+                    disScroll(true)
+                    footer { false }
                     managedBy(Router.placeManager)
                 }
             }
@@ -43,8 +48,6 @@ fun main() {
                 +"power by tower"
             }
         }
-//        Theme.use(DefaultTheme())
-
     }
 }
 

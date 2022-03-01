@@ -21,7 +21,7 @@ ext {
     set("assertJVersion", "3.19.0")
     set("fritz2Version", "0.14")
     set("towerVersion", "1.1.3-SNAPSHOT")
-    set("ui5Version", "1.1.2")
+    set("ui5Version", "1.2.0")
 }
 
 allprojects {
