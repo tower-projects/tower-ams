@@ -21,4 +21,5 @@ kotlin {
         implementation("dev.fritz2:components:$fritz2Version")
         implementation("dev.fritz2:styling:$fritz2Version")
     }
+
 }

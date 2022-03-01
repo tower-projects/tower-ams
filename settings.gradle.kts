@@ -17,5 +17,7 @@ include("web")
 include("domain")
 
 include(
-    "server"
+    "server",
+    "server:job",
+    "server:notification"
 )

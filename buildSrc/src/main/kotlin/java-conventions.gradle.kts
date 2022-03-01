@@ -1,27 +1,27 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins.withType(JavaBasePlugin::class) {
-    project.setProperty("sourceCompatibility", JavaVersion.VERSION_11)
+    project.setProperty("sourceCompatibility", JavaVersion.VERSION_17)
 }
 
 tasks.withType(JavaCompile::class) {
     options.encoding = "UTF-8"
-    sourceCompatibility = JavaVersion.VERSION_11.majorVersion
-    targetCompatibility = JavaVersion.VERSION_11.majorVersion
+    sourceCompatibility = JavaVersion.VERSION_17.majorVersion
+    targetCompatibility = JavaVersion.VERSION_17.majorVersion
 }
 
 tasks.withType(Javadoc::class) {
     options {
-        encoding("UTF-8").source(JavaVersion.VERSION_11.majorVersion)
+        encoding("UTF-8").source(JavaVersion.VERSION_17.majorVersion)
         (this as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
     }
 }
 
 tasks.withType(KotlinCompile::class) {
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_11.majorVersion
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_17.majorVersion
     kotlinOptions.javaParameters = true
-    sourceCompatibility = JavaVersion.VERSION_11.majorVersion
-    targetCompatibility = JavaVersion.VERSION_11.majorVersion
+    sourceCompatibility = JavaVersion.VERSION_17.majorVersion
+    targetCompatibility = JavaVersion.VERSION_17.majorVersion
 }
 
 plugins.withType(JavaPlugin::class) {
