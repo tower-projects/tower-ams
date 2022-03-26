@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.iamcyw.tower.commandhandling.gateway.CommandGateway;
 import io.iamcyw.tower.quarkus.runtime.DomainNameMappings;
 import io.iamcyw.tower.queryhandling.gateway.QueryGateway;
+import io.quarkus.logging.Log;
 import io.quarkus.vertx.web.Route;
 import io.quarkus.vertx.web.RoutingExchange;
 import io.smallrye.common.annotation.Blocking;
@@ -39,6 +40,7 @@ public class ResourceManager {
             }
             ex.ok().end();
         } catch (Exception e) {
+            Log.error(e);
             ex.serverError().send(exception(e, request));
         }
     }
@@ -51,6 +53,7 @@ public class ResourceManager {
             Object result = commandGateway.request(codec(request.params().get(0), getDomain(request.method())));
             ex.ok().end(success(result, request));
         } catch (Exception e) {
+            Log.error(e);
             ex.serverError().send(exception(e, request));
         }
     }
@@ -63,6 +66,7 @@ public class ResourceManager {
             Object result = queryGateway.query(codec(request.params().get(0), getDomain(request.method())));
             ex.ok().end(success(result, request));
         } catch (Exception e) {
+            Log.error(e);
             ex.serverError().send(exception(e, request));
         }
     }
@@ -75,6 +79,7 @@ public class ResourceManager {
             Object result = queryGateway.queries(codec(request.params().get(0), getDomain(request.method())));
             ex.ok().end(success(result, request));
         } catch (Exception e) {
+            Log.error(e);
             ex.serverError().send(exception(e, request));
         }
     }
