@@ -12,7 +12,7 @@ public class AlarmSourcePO extends PanacheEntity {
     public String name;
 
     public static AlarmSourcePO findByName(String name) {
-        return find("name", name).singleResult();
+        return find("name", name).<AlarmSourcePO>singleResultOptional().orElseThrow(IllegalStateException::new);
     }
 
 }

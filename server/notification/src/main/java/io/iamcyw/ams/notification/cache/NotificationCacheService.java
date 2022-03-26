@@ -1,6 +1,6 @@
 package io.iamcyw.ams.notification.cache;
 
-import io.iamcyw.ams.domain.notification.cache.AddAlarm;
+import io.iamcyw.ams.domain.notification.cache.usecase.AddAlarm;
 import io.iamcyw.ams.notification.cache.persistence.AlarmPO;
 import io.iamcyw.tower.commandhandling.CommandHandle;
 

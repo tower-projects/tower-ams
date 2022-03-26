@@ -1,8 +1,8 @@
 package io.iamcyw.ams.job.receive;
 
-import io.iamcyw.ams.domain.job.predicate.QueryAllowStrategy;
-import io.iamcyw.ams.domain.job.receive.ReceiveAlarm;
-import io.iamcyw.ams.domain.notification.cache.AddAlarm;
+import io.iamcyw.ams.domain.job.predicate.usecase.QueryAllowStrategy;
+import io.iamcyw.ams.domain.job.receive.usecase.ReceiveAlarm;
+import io.iamcyw.ams.domain.notification.cache.usecase.AddAlarm;
 import io.iamcyw.ams.job.strategy.persistence.AlarmSourcePO;
 import io.iamcyw.ams.job.strategy.persistence.AlarmStrategyPO;
 import io.iamcyw.tower.commandhandling.CommandHandle;
@@ -26,17 +26,16 @@ public class JobReceiveService {
 
     @CommandHandle
     public void handle(ReceiveAlarm receiveAlarm) {
-        AlarmSourcePO alarmSourcePO = AlarmSourcePO.findByName(receiveAlarm.getSource());
-        List<Long> strategies = queryGateway.queries(
-                new QueryAllowStrategy(alarmSourcePO.id, receiveAlarm.getMessage()));
+        AlarmSourcePO alarmSourcePO = AlarmSourcePO.findByName(receiveAlarm.source());
+        List<Long> strategies = queryGateway.queries(new QueryAllowStrategy(alarmSourcePO.id, receiveAlarm.message()));
         strategies.stream().map(id -> AlarmStrategyPO.<AlarmStrategyPO>findById(id)).filter(alarmStrategyPO -> {
                       // todo 检查是否需要在单位时间内忽略重复警报
                       if (alarmStrategyPO.repeatTimeInterval != 0L) {
 
                       }
                       return true;
-                  }).map(alarmStrategyPO -> new AddAlarm(alarmStrategyPO.id, alarmSourcePO.id,0,
-                                                         receiveAlarm.getMessage()))
+                  }).map(alarmStrategyPO -> new AddAlarm(alarmStrategyPO.id, alarmSourcePO.id, 0L,
+                                                         receiveAlarm.message()))
                   .forEach(commandGateway::send);
 
     }

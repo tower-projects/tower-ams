@@ -1,11 +1,10 @@
 package io.iamcyw.ams.notification.push;
 
-import io.iamcyw.ams.domain.notification.cache.PushAlarm;
+import io.iamcyw.ams.domain.notification.cache.usecase.PushAlarm;
 import io.iamcyw.ams.notification.cache.persistence.AlarmPO;
 import io.quarkus.panache.common.Page;
 import io.quarkus.scheduler.Scheduled;
 import io.smallrye.common.annotation.Blocking;
-import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.MessageProducer;
 import io.vertx.core.shareddata.Lock;
@@ -33,8 +32,8 @@ public class NotificationPushScheduler {
     @Scheduled(every = "{alarm.push.schedule:5s}", concurrentExecution = Scheduled.ConcurrentExecution.SKIP)
     @Blocking
     public void alarmPush() {
-        Future<Lock> lockFuture = vertx.sharedData().getLockWithTimeout("alarm.push", 2 * 1000L);
-        lockFuture.onSuccess(this::processAlarm);
+        Lock lock = vertx.sharedData().getLockWithTimeout("alarm.push", 2 * 1000L).result();
+        processAlarm(lock);
     }
 
     private void processAlarm(Lock lock) {

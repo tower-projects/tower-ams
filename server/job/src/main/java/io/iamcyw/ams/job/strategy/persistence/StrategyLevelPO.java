@@ -8,15 +8,13 @@ import java.util.Set;
 
 @Entity(name = "ALARM_STRATEGY_LEVEL")
 public class StrategyLevelPO extends PanacheEntity {
-    @Id
-    @GeneratedValue
-    public Long id;
 
     /**
      * 当前级别
      * <p>
      * 最低0
      */
+    @Column(name = "LEVEL")
     private int level = 0;
 
     /**
@@ -36,5 +34,6 @@ public class StrategyLevelPO extends PanacheEntity {
     public static Optional<StrategyLevelPO> findWithStrategyAndLevel(int level, long strategy) {
         return find("LEVEL = ?1 and STRATEGY_ID = ?2", level, strategy).singleResultOptional();
     }
+
 
 }

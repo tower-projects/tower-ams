@@ -1,15 +1,11 @@
 plugins {
-    kotlin("jvm")
+    java
     id("io.quarkus")
     id("java-conventions")
 }
 
 
-val serializationVersion: String by project
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${serializationVersion}")
-    // 为了序列化来自kotlin的domain
-
     implementation("io.quarkus:quarkus-hibernate-orm-panache")
     implementation("io.quarkus:quarkus-agroal")
     implementation("io.quarkus:quarkus-jdbc-oracle")

@@ -6,9 +6,6 @@ import javax.persistence.*;
 
 @Entity(name = "ALARM_STRATEGY_LEVEL_TARGET")
 public class StrategyLevelTargetPO extends PanacheEntity {
-    @Id
-    @GeneratedValue
-    public Long id;
 
     @ManyToOne
     @JoinColumn(name = "LEVEL_ID", nullable = false)

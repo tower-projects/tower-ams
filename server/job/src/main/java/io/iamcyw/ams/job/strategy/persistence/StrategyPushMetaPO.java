@@ -17,5 +17,4 @@ public class StrategyPushMetaPO extends PanacheEntity {
     @JoinColumn(name = "PUSH_ID")
     public StrategyPushPO push;
 
-
 }

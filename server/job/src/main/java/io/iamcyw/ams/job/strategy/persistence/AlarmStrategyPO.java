@@ -1,5 +1,7 @@
 package io.iamcyw.ams.job.strategy.persistence;
 
+import io.iamcyw.ams.domain.job.strategy.model.AlarmSourceDO;
+import io.iamcyw.ams.domain.job.strategy.model.AlarmStrategyDO;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 import javax.persistence.*;
@@ -14,16 +16,15 @@ public class AlarmStrategyPO extends PanacheEntity {
 
     public String name;
 
-    @Column(name = "source")
     @ManyToOne(fetch = FetchType.LAZY)
     public AlarmSourcePO source;
 
     @Column(name = "alarm_policies")
-    @ManyToMany(targetEntity = StrategyPolicyPO.class, fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = StrategyPredicatePO.class, fetch = FetchType.LAZY)
     @JoinTable(name = "ALARM_STRATEGY_POLICY_LINK",
-            inverseJoinColumns = {@JoinColumn(name = "POLICY_ID", referencedColumnName = "ID")},
-            joinColumns = {@JoinColumn(name = "STRATEGY_ID", referencedColumnName = "ID")})
-    public List<StrategyPolicyPO> alarmPolicies;
+               inverseJoinColumns = {@JoinColumn(name = "POLICY_ID", referencedColumnName = "ID")},
+               joinColumns = {@JoinColumn(name = "STRATEGY_ID", referencedColumnName = "ID")})
+    public List<StrategyPredicatePO> alarmPolicies;
 
     @Column(name = "level")
     @OneToMany(fetch = FetchType.LAZY)
@@ -50,6 +51,10 @@ public class AlarmStrategyPO extends PanacheEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     public StrategySolvePO solve;
+
+    public AlarmStrategyDO asWithSource() {
+        return new AlarmStrategyDO(id, name, new AlarmSourceDO(source.id, source.name, "", id));
+    }
 
 
 }

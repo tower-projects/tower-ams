@@ -1,10 +1,10 @@
 package io.iamcyw.ams.notification.push;
 
-import io.iamcyw.ams.domain.job.strategy.QueryNextLevelTimeIntervalWithStrategy;
-import io.iamcyw.ams.domain.job.strategy.QueryPushWithStrategy;
-import io.iamcyw.ams.domain.job.strategy.StrategyPush;
-import io.iamcyw.ams.domain.notification.cache.NotificationHandler;
-import io.iamcyw.ams.domain.notification.cache.PushAlarm;
+import io.iamcyw.ams.domain.job.strategy.model.StrategyPushDO;
+import io.iamcyw.ams.domain.job.strategy.usecase.QueryNextLevelTimeIntervalWithStrategy;
+import io.iamcyw.ams.domain.job.strategy.usecase.QueryPushWithStrategy;
+import io.iamcyw.ams.domain.notification.cache.usecase.NotificationHandler;
+import io.iamcyw.ams.domain.notification.cache.usecase.PushAlarm;
 import io.iamcyw.ams.notification.cache.persistence.AlarmPO;
 import io.iamcyw.tower.commandhandling.CommandHandle;
 import io.iamcyw.tower.commandhandling.gateway.CommandGateway;
@@ -34,14 +34,14 @@ public class NotificationPushService {
     @ConsumeEvent(value = "io.iamcyw.ams.notification.cache.PushAlarm", blocking = true)
     @CommandHandle
     public void handle(PushAlarm pushAlarm) {
-        Optional<AlarmPO> optionalAlarmPO = AlarmPO.findByIdOptional(pushAlarm.getAlarm());
+        Optional<AlarmPO> optionalAlarmPO = AlarmPO.findByIdOptional(pushAlarm.alarm());
         optionalAlarmPO = optionalAlarmPO.filter(alarmPO -> alarmPO.status.equals(AlarmPO.AlarmStatus.Process));
 
         if (optionalAlarmPO.isPresent()) {
             AlarmPO alarmPO = optionalAlarmPO.get();
-            List<StrategyPush> strategyPushList = queryGateway.queries(new QueryPushWithStrategy(alarmPO.strategy));
+            List<StrategyPushDO> strategyPushList = queryGateway.queries(new QueryPushWithStrategy(alarmPO.strategy));
 
-            for (StrategyPush strategyPush : strategyPushList) {
+            for (StrategyPushDO strategyPush : strategyPushList) {
                 commandGateway.send(new NotificationHandler(strategyPush, alarmPO.getAlarmMessage()));
             }
 
@@ -55,8 +55,8 @@ public class NotificationPushService {
     }
 
     @PredicateHandle("noticeType")
-    public boolean predicate(NotificationHandler notificationHandler, Class<?> type) {
-        return notificationHandler.getPush().getClass().equals(type);
+    public boolean predicate(NotificationHandler notificationHandler, String type) {
+        return notificationHandler.push().meta().type().equals(type);
     }
 
 

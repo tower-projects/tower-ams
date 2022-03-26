@@ -1,7 +1,7 @@
 package io.iamcyw.ams.notification.cache.persistence;
 
 import io.iamcyw.ams.domain.AlarmMessage;
-import io.iamcyw.ams.domain.notification.cache.AddAlarm;
+import io.iamcyw.ams.domain.notification.cache.usecase.AddAlarm;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Sort;
@@ -15,13 +15,17 @@ import java.util.Set;
 @Entity(name = "ALARM")
 public class AlarmPO extends PanacheEntity {
 
+    @Column(name = "status")
     public AlarmStatus status;
 
+    @Column(name = "createTime")
     @CreationTimestamp
     public LocalDateTime createTime;
 
+    @Column(name = "source")
     public Long source;
 
+    @Column(name = "strategy")
     public long strategy;
 
     public Long currentLevel = 0L;
@@ -32,6 +36,7 @@ public class AlarmPO extends PanacheEntity {
     @Basic(fetch = FetchType.LAZY)
     public String payload;
 
+    @Column(name = "notificationTime")
     public LocalDateTime notificationTime;
 
     @OneToMany
@@ -46,21 +51,18 @@ public class AlarmPO extends PanacheEntity {
      */
     public static PanacheQuery<AlarmPO> findWaitImmediateAlarm() {
         return find("status = ?1 and notificationTime <= ?2", Sort.descending("createTime"), AlarmStatus.Wait,
-                    LocalDateTime.now()
-                                 .plusSeconds(5));
+                    LocalDateTime.now().plusSeconds(5));
     }
 
     public static AlarmPO addAlarm(AddAlarm addAlarm) {
         AlarmPO alarmPO = new AlarmPO();
-        alarmPO.strategy = addAlarm.getStrategy();
+        alarmPO.strategy = addAlarm.strategy();
         alarmPO.status = AlarmPO.AlarmStatus.Wait;
-        alarmPO.source = addAlarm.getSource();
-        alarmPO.alarmMeta = AlarmMetaPO.struct(addAlarm.getPayload()
-                                                       .getHeaders());
-        alarmPO.payload = addAlarm.getPayload()
-                                  .getPayload();
+        alarmPO.source = addAlarm.source();
+        alarmPO.alarmMeta = AlarmMetaPO.struct(addAlarm.payload().headers());
+        alarmPO.payload = addAlarm.payload().payload();
         alarmPO.notificationTime = LocalDateTime.now();
-        alarmPO.currentLevel = addAlarm.getLevel();
+        alarmPO.currentLevel = addAlarm.level();
         alarmPO.persist();
         return alarmPO;
     }
@@ -73,8 +75,7 @@ public class AlarmPO extends PanacheEntity {
 
     public static List<AlarmPO> findLockedAlarm() {
         return find("status = ?1 and notificationTime <= ?2", Sort.descending("createTime"), AlarmStatus.Process,
-                    LocalDateTime.now()
-                                 .plusSeconds(-60)).list();
+                    LocalDateTime.now().plusSeconds(-60)).list();
     }
 
     public AlarmMessage getAlarmMessage() {
