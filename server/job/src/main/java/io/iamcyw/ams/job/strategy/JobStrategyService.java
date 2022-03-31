@@ -10,6 +10,8 @@ import io.iamcyw.ams.job.strategy.persistence.AlarmStrategyPO;
 import io.iamcyw.ams.job.strategy.persistence.StrategyPushPO;
 import io.iamcyw.tower.common.Pages;
 import io.iamcyw.tower.queryhandling.QueryHandle;
+import org.eclipse.microprofile.graphql.GraphQLApi;
+import org.eclipse.microprofile.graphql.Query;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
@@ -17,27 +19,30 @@ import java.util.List;
 
 @ApplicationScoped
 @Transactional
+@GraphQLApi
 public class JobStrategyService {
 
     @QueryHandle
-    public List<StrategyPushDO> query(QueryPushWithStrategy queryPushWithStrategy) {
+    public List<StrategyPushDO> queryPushWithStrategy(QueryPushWithStrategy queryPushWithStrategy) {
         return StrategyPushPO.<StrategyPushPO>stream("STRATEGY_ID", queryPushWithStrategy.strategy())
                              .map(StrategyPushPO::as).toList();
     }
 
     @QueryHandle
-    public AlarmStrategyDO query(GetStrategyByID query) {
+    @Query
+    public AlarmStrategyDO getStrategyByID(GetStrategyByID query) {
         return AlarmStrategyPO.<AlarmStrategyPO>findById(query.id()).asWithSource();
     }
 
     @QueryHandle
-    public List<AlarmStrategyDO> query(QueryStrategyList query) {
+    @Query
+    public List<AlarmStrategyDO> queryStrategyList(QueryStrategyList query) {
         return AlarmStrategyPO.findAll().page(Pages.as(query.pagination())).<AlarmStrategyPO>stream()
                               .map(AlarmStrategyPO::asWithSource).toList();
     }
 
     @QueryHandle
-    public Long query(GetStrategyTotal query) {
+    public Long getStrategyTotal(GetStrategyTotal query) {
         return AlarmStrategyPO.findAll().count();
     }
 

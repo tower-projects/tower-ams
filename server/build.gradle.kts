@@ -10,6 +10,8 @@ dependencies {
     implementation("io.quarkus:quarkus-agroal")
     implementation("io.quarkus:quarkus-jdbc-oracle")
     implementation("io.quarkus:quarkus-vertx-web")
+    implementation("io.quarkus:quarkus-smallrye-graphql")
+
     implementation("io.iamcyw.tower:messaging-core")
     implementation("io.iamcyw.tower:tower-quarkus")
     implementation("io.iamcyw.tower:tower-quarkus-deployment")

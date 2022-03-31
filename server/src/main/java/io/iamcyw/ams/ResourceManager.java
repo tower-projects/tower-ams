@@ -2,6 +2,7 @@ package io.iamcyw.ams;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.iamcyw.tower.commandhandling.gateway.CommandGateway;
+import io.iamcyw.tower.messaging.responsetype.ResponseTypes;
 import io.iamcyw.tower.quarkus.runtime.DomainNameMappings;
 import io.iamcyw.tower.queryhandling.gateway.QueryGateway;
 import io.quarkus.logging.Log;
@@ -50,7 +51,8 @@ public class ResourceManager {
     public void request(RoutingExchange ex) {
         JsonRpcRequest request = ex.context().getBodyAsJson().mapTo(JsonRpcRequest.class);
         try {
-            Object result = commandGateway.request(codec(request.params().get(0), getDomain(request.method())));
+            Object result = commandGateway.request(codec(request.params().get(0), getDomain(request.method())),
+                                                   ResponseTypes.instanceOf(Object.class));
             ex.ok().end(success(result, request));
         } catch (Exception e) {
             Log.error(e);
@@ -63,7 +65,8 @@ public class ResourceManager {
     public void query(RoutingExchange ex) {
         JsonRpcRequest request = ex.context().getBodyAsJson().mapTo(JsonRpcRequest.class);
         try {
-            Object result = queryGateway.query(codec(request.params().get(0), getDomain(request.method())));
+            Object result = queryGateway.query(codec(request.params().get(0), getDomain(request.method())),
+                                               Object.class);
             ex.ok().end(success(result, request));
         } catch (Exception e) {
             Log.error(e);
@@ -76,7 +79,8 @@ public class ResourceManager {
     public void queries(RoutingExchange ex) {
         JsonRpcRequest request = ex.context().getBodyAsJson().mapTo(JsonRpcRequest.class);
         try {
-            Object result = queryGateway.queries(codec(request.params().get(0), getDomain(request.method())));
+            Object result = queryGateway.queries(codec(request.params().get(0), getDomain(request.method())),
+                                                 Object.class);
             ex.ok().end(success(result, request));
         } catch (Exception e) {
             Log.error(e);

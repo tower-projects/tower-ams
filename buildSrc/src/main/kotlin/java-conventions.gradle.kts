@@ -25,7 +25,7 @@ tasks.withType(KotlinCompile::class) {
 }
 
 plugins.withType(JavaPlugin::class) {
-    val enforced = dependencies.platform("io.iamcyw.tower:messaging-dependencies:${rootProject.extra["tower"]}")
+    val enforced = dependencies.enforcedPlatform("io.iamcyw.tower:messaging-dependencies:${rootProject.extra["tower"]}")
     val quarkusEnf = dependencies.enforcedPlatform("io.quarkus.platform:quarkus-bom:${rootProject.extra["quarkus"]}")
     val camelEnf = dependencies.enforcedPlatform("io.quarkus.platform:quarkus-camel-bom:${rootProject.extra["quarkus"]}")
 

@@ -6,7 +6,7 @@ plugins {
 
 ext {
     // Dependencies
-    set("tower", "1.1.3-SNAPSHOT")
+    set("tower", "1.2.0-SNAPSHOT")
     set("quarkus", "2.7.2.Final")
 }
 
