@@ -39,7 +39,8 @@ public class NotificationPushService {
 
         if (optionalAlarmPO.isPresent()) {
             AlarmPO alarmPO = optionalAlarmPO.get();
-            List<StrategyPushDO> strategyPushList = queryGateway.queries(new QueryPushWithStrategy(alarmPO.strategy),StrategyPushDO.class);
+            List<StrategyPushDO> strategyPushList = queryGateway.queries(new QueryPushWithStrategy(alarmPO.strategy),
+                                                                         StrategyPushDO.class);
 
             for (StrategyPushDO strategyPush : strategyPushList) {
                 commandGateway.send(new NotificationHandler(strategyPush, alarmPO.getAlarmMessage()));
@@ -49,7 +50,7 @@ public class NotificationPushService {
 
             //检查有没有下一层需要升级
             Long levelTimeInterval = queryGateway.query(
-                    new QueryNextLevelTimeIntervalWithStrategy(alarmPO.strategy, alarmPO.currentLevel),Long.class);
+                    new QueryNextLevelTimeIntervalWithStrategy(alarmPO.strategy, alarmPO.currentLevel), Long.class);
             alarmPO.checkLevelTime = LocalDateTime.now().plusMinutes(levelTimeInterval);
         }
     }

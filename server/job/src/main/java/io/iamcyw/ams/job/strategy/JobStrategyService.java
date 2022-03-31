@@ -1,13 +1,13 @@
 package io.iamcyw.ams.job.strategy;
 
-import io.iamcyw.ams.domain.job.strategy.model.AlarmStrategyDO;
-import io.iamcyw.ams.domain.job.strategy.model.StrategyPushDO;
+import io.iamcyw.ams.domain.job.strategy.entity.AlarmStrategy;
+import io.iamcyw.ams.domain.job.strategy.entity.StrategyPush;
 import io.iamcyw.ams.domain.job.strategy.usecase.GetStrategyByID;
 import io.iamcyw.ams.domain.job.strategy.usecase.GetStrategyTotal;
 import io.iamcyw.ams.domain.job.strategy.usecase.QueryPushWithStrategy;
 import io.iamcyw.ams.domain.job.strategy.usecase.QueryStrategyList;
-import io.iamcyw.ams.job.strategy.persistence.AlarmStrategyPO;
-import io.iamcyw.ams.job.strategy.persistence.StrategyPushPO;
+import io.iamcyw.ams.job.strategy.repository.AlarmStrategyRepository;
+import io.iamcyw.ams.job.strategy.repository.StrategyPushRepository;
 import io.iamcyw.tower.common.Pages;
 import io.iamcyw.tower.queryhandling.QueryHandle;
 import org.eclipse.microprofile.graphql.GraphQLApi;
@@ -22,28 +22,36 @@ import java.util.List;
 @GraphQLApi
 public class JobStrategyService {
 
+    private final StrategyPushRepository strategyPushRepository;
+
+    private final AlarmStrategyRepository alarmStrategyRepository;
+
+    public JobStrategyService(StrategyPushRepository strategyPushRepository,
+                              AlarmStrategyRepository alarmStrategyRepository) {
+        this.strategyPushRepository = strategyPushRepository;
+        this.alarmStrategyRepository = alarmStrategyRepository;
+    }
+
     @QueryHandle
-    public List<StrategyPushDO> queryPushWithStrategy(QueryPushWithStrategy queryPushWithStrategy) {
-        return StrategyPushPO.<StrategyPushPO>stream("STRATEGY_ID", queryPushWithStrategy.strategy())
-                             .map(StrategyPushPO::as).toList();
+    public List<StrategyPush> queryPushWithStrategy(QueryPushWithStrategy queryPushWithStrategy) {
+        return strategyPushRepository.stream("STRATEGY_ID", queryPushWithStrategy.strategy()).toList();
     }
 
     @QueryHandle
     @Query
-    public AlarmStrategyDO getStrategyByID(GetStrategyByID query) {
-        return AlarmStrategyPO.<AlarmStrategyPO>findById(query.id()).asWithSource();
+    public AlarmStrategy getStrategyByID(GetStrategyByID query) {
+        return alarmStrategyRepository.findById(query.id());
     }
 
     @QueryHandle
     @Query
-    public List<AlarmStrategyDO> queryStrategyList(QueryStrategyList query) {
-        return AlarmStrategyPO.findAll().page(Pages.as(query.pagination())).<AlarmStrategyPO>stream()
-                              .map(AlarmStrategyPO::asWithSource).toList();
+    public List<AlarmStrategy> queryStrategyList(QueryStrategyList query) {
+        return alarmStrategyRepository.findAll().page(Pages.as(query.pagination())).stream().toList();
     }
 
     @QueryHandle
     public Long getStrategyTotal(GetStrategyTotal query) {
-        return AlarmStrategyPO.findAll().count();
+        return alarmStrategyRepository.findAll().count();
     }
 
 }

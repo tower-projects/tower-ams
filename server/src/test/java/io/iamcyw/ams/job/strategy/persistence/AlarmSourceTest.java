@@ -6,11 +6,10 @@ import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 @TestTransaction
-public class StrategyLevelPOTest {
+public class AlarmSourceTest {
 
     @Test
-    void findWithStrategyAndLevel() {
-        StrategyLevelPO.findWithStrategyAndLevel(1, 1);
+    void findByName() {
     }
 
 }
