@@ -2,7 +2,10 @@ package io.iamcyw.ams.domain.job.strategy.entity;
 
 import io.iamcyw.ams.domain.BasicEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 
 @Entity(name = "ALARM_STRATEGY_PUSH_META")
 public class StrategyPushMeta extends BasicEntity {
@@ -14,7 +17,6 @@ public class StrategyPushMeta extends BasicEntity {
     public String metaValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PUSH_ID")
     public StrategyPush push;
 
     public String getMetaKey() {

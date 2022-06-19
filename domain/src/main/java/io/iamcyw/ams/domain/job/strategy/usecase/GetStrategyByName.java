@@ -1,4 +1,4 @@
 package io.iamcyw.ams.domain.job.strategy.usecase;
 
-public record QueryAllSource() {
+public record GetStrategyByName(String name) {
 }

@@ -9,8 +9,9 @@ dependencies {
     implementation("io.quarkus:quarkus-hibernate-orm-panache")
     implementation("io.quarkus:quarkus-agroal")
     implementation("io.quarkus:quarkus-jdbc-oracle")
-    implementation("io.quarkus:quarkus-vertx-web")
-    implementation("io.quarkus:quarkus-smallrye-graphql")
+    implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
+//    implementation("io.quarkus:quarkus-hibernate-validator")
+
 
     implementation("io.iamcyw.tower:messaging-core")
     implementation("io.iamcyw.tower:tower-quarkus")

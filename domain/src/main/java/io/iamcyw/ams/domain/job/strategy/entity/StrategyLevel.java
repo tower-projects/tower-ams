@@ -12,7 +12,7 @@ public class StrategyLevel extends BasicEntity {
      * <p>
      * 最低0
      */
-    @Column(name = "LEVEL")
+    @Column(name = "alarm_level")
     private int level = 0;
 
     /**
@@ -22,11 +22,11 @@ public class StrategyLevel extends BasicEntity {
 
     private String name;
 
-    @JoinColumn(name = "STRATEGY_ID", nullable = false)
     @ManyToOne
     private AlarmStrategy strategy;
 
     @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "level_id", nullable = false)
     private Set<StrategyLevelTarget> target;
 
 

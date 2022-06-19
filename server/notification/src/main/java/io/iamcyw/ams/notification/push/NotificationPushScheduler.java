@@ -1,7 +1,8 @@
 package io.iamcyw.ams.notification.push;
 
+import io.iamcyw.ams.domain.notification.cache.entity.Alarm;
 import io.iamcyw.ams.domain.notification.cache.usecase.PushAlarm;
-import io.iamcyw.ams.notification.cache.persistence.AlarmPO;
+import io.iamcyw.ams.notification.cache.repository.AlarmRepository;
 import io.quarkus.panache.common.Page;
 import io.quarkus.scheduler.Scheduled;
 import io.smallrye.common.annotation.Blocking;
@@ -18,18 +19,21 @@ public class NotificationPushScheduler {
 
     protected final Vertx vertx;
 
+    protected final AlarmRepository alarmRepository;
+
     protected final MessageProducer<PushAlarm> alarmProducer;
 
-    public NotificationPushScheduler(Vertx vertx) {
+    public NotificationPushScheduler(Vertx vertx, AlarmRepository alarmRepository) {
         this.vertx = vertx;
         this.alarmProducer = vertx.eventBus().sender(PushAlarm.class.getSimpleName());
+        this.alarmRepository = alarmRepository;
     }
 
     /**
      * 处理所有待发送就绪的警报
      * 默认 timeout 最长10s
      */
-    @Scheduled(every = "{alarm.push.schedule:5s}", concurrentExecution = Scheduled.ConcurrentExecution.SKIP)
+    // @Scheduled(every = "{alarm.push.schedule:5s}", concurrentExecution = Scheduled.ConcurrentExecution.SKIP)
     @Blocking
     public void alarmPush() {
         Lock lock = vertx.sharedData().getLockWithTimeout("alarm.push", 2 * 1000L).result();
@@ -38,11 +42,11 @@ public class NotificationPushScheduler {
 
     private void processAlarm(Lock lock) {
         try {
-            AlarmPO.findWaitImmediateAlarm().page(Page.ofSize(50)).stream().forEach(alarm -> {
-                alarm.status = AlarmPO.AlarmStatus.Process;
-                alarm.persistAndFlush();
+            alarmRepository.findWaitImmediateAlarm().page(Page.ofSize(50)).stream().forEach(alarm -> {
+                alarm.setStatus(Alarm.AlarmStatus.PROCESS);
+                alarmRepository.persistAndFlush(alarm);
 
-                alarmProducer.write(new PushAlarm(alarm.id));
+                alarmProducer.write(new PushAlarm(alarm.getId()));
             });
 
         } catch (Exception e) {

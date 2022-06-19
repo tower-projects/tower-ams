@@ -11,7 +11,7 @@ public class BasicEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
     public Long getId() {
         return id;

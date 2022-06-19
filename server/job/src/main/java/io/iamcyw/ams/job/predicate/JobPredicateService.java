@@ -3,38 +3,32 @@ package io.iamcyw.ams.job.predicate;
 import io.iamcyw.ams.domain.job.predicate.usecase.QueryAllowStrategy;
 import io.iamcyw.ams.domain.job.strategy.entity.StrategyPredicate;
 import io.iamcyw.ams.job.strategy.repository.StrategyPredicateRepository;
-import io.iamcyw.tower.commandhandling.gateway.CommandGateway;
-import io.iamcyw.tower.queryhandling.QueryHandle;
-import io.iamcyw.tower.queryhandling.gateway.QueryGateway;
+import io.iamcyw.tower.messaging.QueryHandle;
+import io.iamcyw.tower.messaging.UseCase;
+import io.iamcyw.tower.messaging.gateway.MessageGateway;
 
-import javax.enterprise.context.ApplicationScoped;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-@ApplicationScoped
+@UseCase
 public class JobPredicateService {
 
-    protected final QueryGateway queryGateway;
-
-    protected final CommandGateway commandGateway;
+    protected final MessageGateway messageGateway;
 
     protected final StrategyPredicateRepository predicateRepository;
 
-    public JobPredicateService(QueryGateway queryGateway, CommandGateway commandGateway,
-                               StrategyPredicateRepository predicateRepository) {
-        this.queryGateway = queryGateway;
-        this.commandGateway = commandGateway;
+    public JobPredicateService(MessageGateway messageGateway, StrategyPredicateRepository predicateRepository) {
+        this.messageGateway = messageGateway;
         this.predicateRepository = predicateRepository;
     }
 
-
     @QueryHandle
-    public List<Long> query(QueryAllowStrategy queryAllowStrategy) {
+    public Set<Long> query(QueryAllowStrategy queryAllowStrategy) {
         List<StrategyPredicate> policyList = predicateRepository.queryBySource(queryAllowStrategy.source());
 
-        return policyList.stream().filter(policy -> policy.predicatePayLoad(queryAllowStrategy.payload())).flatMap(
-                                 strategy -> strategy.strategy.stream().map(alarmStrategyPO -> alarmStrategyPO.getId())).distinct()
-                         .collect(Collectors.toList());
+        return policyList.stream().parallel().filter(policy -> policy.predicatePayLoad(queryAllowStrategy.payload()))
+                         .map(strategy -> strategy.getStrategy().getId()).collect(Collectors.toUnmodifiableSet());
     }
 
 }

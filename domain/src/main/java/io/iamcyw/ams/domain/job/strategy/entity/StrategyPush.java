@@ -15,10 +15,10 @@ public class StrategyPush extends BasicEntity {
     private String template;
 
     @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "push_id")
     private Set<StrategyPushMeta> meta;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "STRATEGY_ID")
     private AlarmStrategy strategy;
 
 

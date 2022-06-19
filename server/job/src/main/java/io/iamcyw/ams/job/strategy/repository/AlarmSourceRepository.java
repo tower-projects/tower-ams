@@ -4,13 +4,13 @@ import io.iamcyw.ams.domain.job.strategy.entity.AlarmSource;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.Optional;
 
 @ApplicationScoped
 public class AlarmSourceRepository implements PanacheRepository<AlarmSource> {
 
-
-    public AlarmSource findByName(String name) {
-        return find("name", name).singleResultOptional().orElseThrow(IllegalStateException::new);
+    public Optional<AlarmSource> findByName(String name) {
+        return find("name", name).singleResultOptional();
     }
 
 }

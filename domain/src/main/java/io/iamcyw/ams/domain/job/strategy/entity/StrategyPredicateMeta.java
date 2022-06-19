@@ -2,33 +2,23 @@ package io.iamcyw.ams.domain.job.strategy.entity;
 
 import io.iamcyw.ams.domain.BasicEntity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 
 @Entity(name = "ALARM_STRATEGY_PREDICATE_META")
 public class StrategyPredicateMeta extends BasicEntity {
 
+    MessageScope scope;
 
-    public MessageScope scope;
+    String contrastKey;
 
-    public String contrastKey;
+    String contrastValue;
 
-    public String contrastValue;
-
-    public PolicyContrastType contrastType;
+    PolicyContrastType contrastType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    public StrategyPredicate policy;
-
-    public enum MessageScope {
-        Headers,
-        Payload
-    }
-
-    public enum PolicyContrastType {
-        Fixed,
-        Express,
-        Pass
-    }
+    StrategyPredicate policy;
 
     public MessageScope getScope() {
         return scope;
@@ -68,6 +58,17 @@ public class StrategyPredicateMeta extends BasicEntity {
 
     public void setPolicy(StrategyPredicate policy) {
         this.policy = policy;
+    }
+
+    public enum MessageScope {
+        HEADERS,
+        PAYLOAD
+    }
+
+    public enum PolicyContrastType {
+        FIXED,
+        EXPRESS,
+        PASS
     }
 
 }

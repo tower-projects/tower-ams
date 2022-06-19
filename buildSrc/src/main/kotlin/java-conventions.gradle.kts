@@ -35,4 +35,11 @@ plugins.withType(JavaPlugin::class) {
     configurations.getByName(JavaPlugin.ANNOTATION_PROCESSOR_CONFIGURATION_NAME) {
         dependencies.add(quarkusEnf)
     }
+
+    dependencies {
+        add(JavaPlugin.ANNOTATION_PROCESSOR_CONFIGURATION_NAME, "org.jboss.logging:jboss-logging")
+        add(JavaPlugin.ANNOTATION_PROCESSOR_CONFIGURATION_NAME, "org.jboss.logging:jboss-logging-annotations")
+        add(JavaPlugin.ANNOTATION_PROCESSOR_CONFIGURATION_NAME, "org.jboss.logging:jboss-logging-processor")
+    }
+
 }

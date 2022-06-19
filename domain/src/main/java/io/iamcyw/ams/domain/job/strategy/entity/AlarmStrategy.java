@@ -12,28 +12,31 @@ import java.util.Set;
 @Entity(name = "ALARM_STRATEGY")
 public class AlarmStrategy extends BasicEntity {
 
-    public String name;
+    private String name;
+
+    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    public AlarmSource source;
+    private AlarmSource source;
 
     @Column(name = "alarm_policies")
     @ManyToMany(targetEntity = StrategyPredicate.class, fetch = FetchType.LAZY)
     @JoinTable(name = "ALARM_STRATEGY_POLICY_LINK",
                inverseJoinColumns = {@JoinColumn(name = "POLICY_ID", referencedColumnName = "ID")},
                joinColumns = {@JoinColumn(name = "STRATEGY_ID", referencedColumnName = "ID")})
-    public List<StrategyPredicate> alarmPolicies;
+    private List<StrategyPredicate> alarmPolicies;
 
     @Column(name = "level")
+    @JoinColumn(name = "STRATEGY_ID", nullable = false)
     @OneToMany(fetch = FetchType.LAZY)
-    public Set<StrategyLevel> level;
+    private Set<StrategyLevel> level;
 
     /**
      * 单位:分钟
      * <p>
      * 如果具体级别的间隔时间没有设置才使用该值
      */
-    public Long levelTimeInterval = 0L;
+    private Long levelTimeInterval = 0L;
 
     /**
      * 单位:秒
@@ -42,13 +45,26 @@ public class AlarmStrategy extends BasicEntity {
      * <p>
      * 指定距离上次警报间隔多长才能再次发送
      */
-    public Long repeatTimeInterval = 0L;
+    private Long repeatTimeInterval = 0L;
 
     @OneToMany(fetch = FetchType.LAZY)
-    public Set<StrategyPush> push;
+    @JoinColumn(name = "STRATEGY_ID")
+    private Set<StrategyPush> push;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    public StrategySolve solve;
+    private StrategySolve solve;
+
+    public static AlarmStrategy createStrategy(long source, String name, String desc) {
+        AlarmSource alarmSource = new AlarmSource();
+        alarmSource.setId(source);
+
+        AlarmStrategy alarmStrategy = new AlarmStrategy();
+        alarmStrategy.source = alarmSource;
+        alarmStrategy.name = name;
+        alarmStrategy.description = desc;
+
+        return alarmStrategy;
+    }
 
     public String getName() {
         return name;

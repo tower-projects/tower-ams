@@ -4,16 +4,16 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class EmailPushMetaDO {
-    public final static String type = "mail";
+    public static final String TYPE = "mail";
 
     private final StrategyPushMetaDO strategyPushMetaDO;
 
     public EmailPushMetaDO() {
-        strategyPushMetaDO = new StrategyPushMetaDO(type, new HashMap<>(10));
+        strategyPushMetaDO = new StrategyPushMetaDO(TYPE, new HashMap<>(10));
     }
 
     public EmailPushMetaDO(StrategyPushMetaDO strategyPushMetaDO) {
-        if (Objects.equals(strategyPushMetaDO.type(), type)) {
+        if (Objects.equals(strategyPushMetaDO.type(), TYPE)) {
             this.strategyPushMetaDO = strategyPushMetaDO;
         } else {
             throw new IllegalArgumentException("StrategyPushMeta type not match");

@@ -1,22 +1,25 @@
 package io.iamcyw.ams.job.strategy.persistence;
 
-import io.iamcyw.ams.job.strategy.repository.StrategyLevelRepository;
+import io.iamcyw.ams.domain.AlarmMessage;
+import io.iamcyw.ams.domain.job.receive.usecase.ReceiveAlarm;
+import io.iamcyw.tower.messaging.gateway.MessageGateway;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 @QuarkusTest
 @TestTransaction
-public class StrategyLevelTest {
+class StrategyLevelTest {
 
     @Inject
-    StrategyLevelRepository strategyLevelRepository;
+    MessageGateway messageGateway;
 
     @Test
-    void findWithStrategyAndLevel() {
-        strategyLevelRepository.findWithStrategyAndLevel(1, 1);
+    void testReceiveAlarm() {
+        messageGateway.send(new ReceiveAlarm("source", new AlarmMessage(Map.of(), "")));
     }
 
 }
