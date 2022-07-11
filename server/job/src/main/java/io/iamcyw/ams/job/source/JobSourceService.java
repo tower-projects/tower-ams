@@ -3,6 +3,7 @@ package io.iamcyw.ams.job.source;
 import io.iamcyw.ams.domain.job.source.usecase.AddAlarmSource;
 import io.iamcyw.ams.domain.job.source.usecase.QueryAllSource;
 import io.iamcyw.ams.domain.job.strategy.entity.AlarmSource;
+import io.iamcyw.ams.domain.job.strategy.usecase.DeleteAlarmSource;
 import io.iamcyw.ams.job.AlarmJobServerMessages;
 import io.iamcyw.ams.job.strategy.repository.AlarmSourceRepository;
 import io.iamcyw.tower.messaging.CommandHandle;
@@ -36,6 +37,13 @@ public class JobSourceService {
         alarmSource.setName(command.name());
         alarmSource.setComments(command.comment());
         alarmSourceRepository.persist(alarmSource);
+    }
+
+    @CommandHandle
+    public void command(DeleteAlarmSource command) {
+        //todo check source used
+
+        alarmSourceRepository.deleteById(command.id());
     }
 
 }

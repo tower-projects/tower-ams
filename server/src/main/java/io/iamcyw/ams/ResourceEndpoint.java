@@ -6,6 +6,7 @@ import io.iamcyw.tower.schema.model.OperationType;
 import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;
 import org.apache.commons.lang3.ObjectUtils;
+import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
@@ -17,6 +18,9 @@ import java.util.Map;
 
 @Path("/message")
 public class ResourceEndpoint {
+
+    private static final Logger LOGGER = Logger.getLogger(ResourceEndpoint.class);
+
     private final MessageGateway messageGateway;
 
     public ResourceEndpoint(MessageGateway messageGateway) {
@@ -25,6 +29,7 @@ public class ResourceEndpoint {
 
     @ServerExceptionMapper
     public RestResponse<Map<String, String>> mapException(Throwable throwable) {
+        LOGGER.error(throwable.getMessage(), throwable);
         if (ObjectUtils.isNotEmpty(throwable.getMessage())) {
             String[] messages = throwable.getMessage().split(StringPool.COLON, 2);
             if (messages.length == 2) {

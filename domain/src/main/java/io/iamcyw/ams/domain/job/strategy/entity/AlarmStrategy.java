@@ -14,7 +14,7 @@ public class AlarmStrategy extends BasicEntity {
 
     private String name;
 
-    private String description;
+    private String comments;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private AlarmSource source;
@@ -54,14 +54,14 @@ public class AlarmStrategy extends BasicEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private StrategySolve solve;
 
-    public static AlarmStrategy createStrategy(long source, String name, String desc) {
+    public static AlarmStrategy createStrategy(long source, String name, String comments) {
         AlarmSource alarmSource = new AlarmSource();
         alarmSource.setId(source);
 
         AlarmStrategy alarmStrategy = new AlarmStrategy();
         alarmStrategy.source = alarmSource;
         alarmStrategy.name = name;
-        alarmStrategy.description = desc;
+        alarmStrategy.comments = comments;
 
         return alarmStrategy;
     }

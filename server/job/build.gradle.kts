@@ -12,4 +12,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":server:common"))
 
+    implementation("org.mvel:mvel2:2.4.14.Final")
+
+
 }

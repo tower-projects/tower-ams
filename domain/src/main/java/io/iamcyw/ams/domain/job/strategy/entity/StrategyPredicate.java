@@ -3,9 +3,9 @@ package io.iamcyw.ams.domain.job.strategy.entity;
 import io.iamcyw.ams.domain.AlarmMessage;
 import io.iamcyw.ams.domain.BasicEntity;
 
-import javax.persistence.*;
-import java.util.Objects;
-import java.util.Set;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 
 @Entity(name = "ALARM_STRATEGY_PREDICATE")
 public class StrategyPredicate extends BasicEntity {
@@ -16,43 +16,27 @@ public class StrategyPredicate extends BasicEntity {
     @ManyToOne(targetEntity = AlarmStrategy.class, fetch = FetchType.LAZY)
     private AlarmStrategy strategy;
 
-    @Deprecated
-    private String name;
+    private PolicyContrastType type;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "predicate_id")
-    private Set<StrategyPredicateMeta> metadata;
+    private String express;
 
     public boolean predicatePayLoad(AlarmMessage alarmMessage) {
-        return metadata.stream().allMatch(meta -> switch (meta.contrastType) {
-            case FIXED -> fixed(meta.scope, meta.contrastKey, meta.contrastValue, alarmMessage);
-            case EXPRESS -> express(meta.scope, meta.contrastKey, meta.contrastValue, alarmMessage);
+        return switch (type) {
+            case EXPRESS -> express(express, alarmMessage);
             case PASS -> true;
-        });
+        };
     }
 
     /**
-     * todo 比较目标字段的表达值
+     * 比较目标字段的表达值
      *
-     * @param scope
-     * @param contrastKey
-     * @param contrastValue
-     * @param alarmMessage
+     * @param express      表达式
+     * @param alarmMessage 实际值
      * @return
      */
-    private boolean express(StrategyPredicateMeta.MessageScope scope, String contrastKey, String contrastValue,
-                            AlarmMessage alarmMessage) {
+    private boolean express(String express, AlarmMessage alarmMessage) {
+        //todo mvel
         return false;
-    }
-
-    private boolean fixed(StrategyPredicateMeta.MessageScope scope, String contrastKey, String contrastValue,
-                          AlarmMessage alarmMessage) {
-        String actualValue = switch (scope) {
-            case HEADERS -> alarmMessage.headers().get(contrastKey);
-            // todo json
-            case PAYLOAD -> "";
-        };
-        return Objects.equals(actualValue, contrastValue);
     }
 
     public AlarmStrategy getStrategy() {
@@ -63,30 +47,33 @@ public class StrategyPredicate extends BasicEntity {
         this.strategy = strategy;
     }
 
-    @Deprecated
-    public String getName() {
-        return name;
-    }
-
-    @Deprecated
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<StrategyPredicateMeta> getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(Set<StrategyPredicateMeta> metadata) {
-        this.metadata = metadata;
-    }
-
     public AlarmSource getSource() {
         return source;
     }
 
     public void setSource(AlarmSource source) {
         this.source = source;
+    }
+
+    public PolicyContrastType getType() {
+        return type;
+    }
+
+    public void setType(PolicyContrastType type) {
+        this.type = type;
+    }
+
+    public String getExpress() {
+        return express;
+    }
+
+    public void setExpress(String express) {
+        this.express = express;
+    }
+
+    public enum PolicyContrastType {
+        EXPRESS,
+        PASS
     }
 
 }
